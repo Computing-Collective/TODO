@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import DataTable from "./components/DataTable";
 import ContainedButtons from "./components/ContainedButton";
@@ -8,8 +8,13 @@ import axios, { isCancel, AxiosError } from "axios";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from "@mui/material/IconButton";
 import refreshPage from "./functions/refresh";
+import { Announcement } from "@mui/icons-material";
 
 function App() {
+  const [view, setView] = useState("announcements");
+  const [assignment, setAssignments] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -19,7 +24,10 @@ function App() {
             <span>
               <IconButton
                 onClick={() => {
-                  refreshPage();
+                  axios.get(`/api/new-${view}`).then((response) => {
+                    // rows = response...
+                    console.log(response);
+                  });
                 }}
                 aria-label="refresh"
                 style={{}}
@@ -28,8 +36,20 @@ function App() {
               </IconButton>
             </span>
             <span style={{ flexGrow: 0.5 }} />
-            <ContainedButtons text="Announcement view" width="200px" />
-            <ContainedButtons text="Assignment view" width="200px" />
+            <ContainedButtons
+              onClick={() => {
+                setView("announcements");
+              }}
+              text="Announcement view"
+              width="200px"
+            />
+            <ContainedButtons
+              onClick={() => {
+                setView("assignments");
+              }}
+              text="Assignment view"
+              width="200px"
+            />
           </Stack>
         </span>
       </Grid>
@@ -77,5 +97,3 @@ const rows = [
     // completed: <CheckBoxOutlineBlankIcon />,
   },
 ];
-
-
