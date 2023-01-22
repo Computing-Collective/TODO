@@ -3,6 +3,7 @@ import dotenv
 import os
 import datetime
 import sys
+import time
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -22,7 +23,11 @@ def canvas_api(include_assignment=True, include_announcement=True):
         include_assignment (bool): whether to add assignments to the database. Defaults to True.
         include_announcement (bool): whether to add announcements to the database (also includes mail). Defaults to True.
     """
+    
+    start = time.time()
     canvas = Canvas(API_URL, API_TOKEN)
+    end = time.time()
+    print("setup time: ", end - start)
 
     user = canvas.get_current_user()
     courses = canvas.get_courses(enrollment_state="active")
@@ -36,7 +41,9 @@ def canvas_api(include_assignment=True, include_announcement=True):
     courses_to_add = []
 
     if include_assignment:
+        start = time.time()
         for course in courses:
+            t0 = time.time()
             course_list.append(course)
             course_name: str = canvas.get_course_nickname(course).nickname
             if course_name is None:
@@ -63,10 +70,19 @@ def canvas_api(include_assignment=True, include_announcement=True):
                 submission_status: bool = assignment.has_submitted_submissions
                 assignments_to_add.append(
                     Assignment(identifier, course_name, link, due_date, lock_date, title, False, submission_status, description))
+            t1 = time.time()
+            print("--> for loop time: ", t1 - t0)
 
+        
+        end = time.time()
+        print("for loop time: ", end - start)
+        
+        start = time.time()
         add_to_database(assignments_to_add, "assignments")
         add_to_database(courses_to_add, "courses")
-
+        end = time.time()
+        print("add to database time: ", end - start)
+    
     if include_announcement:
         for course in courses:
             course_list.append(course)
