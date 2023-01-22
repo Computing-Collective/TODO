@@ -31,3 +31,5 @@ def add_to_database(data: list, data_type: str):
                     "description": item.description
                 }
                 collection.insert_one(obj)
+    elif data_type == "announcements":
+        collection = db.announcements

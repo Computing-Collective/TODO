@@ -2,11 +2,13 @@ from piazza_api import Piazza
 import os
 import dotenv
 import datetime
+
 from database.models import (
     Assignment,
     AnnouncementMessage,
     DiscussionPost,
 )  # TODO: add discussions
+from database.queries import add_to_database
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -23,6 +25,7 @@ def piazza(term="Winter Term 2 2023"):
 
     class_id_name_dict = {}  # str / str
     announcements_to_add = []
+    discussions_to_add = []
 
     for clas in classes:
         if clas["term"] == term:
@@ -51,6 +54,9 @@ def piazza(term="Winter Term 2 2023"):
             else:
                 original_poster = "Anonymous"
 
+            # type of message
+            msg_type: str = post["type"]
+
             subject: str = post["history"][0]["subject"]
             # get course
             course_arr = name.split(" ")  # TODO: get course from database
@@ -64,11 +70,25 @@ def piazza(term="Winter Term 2 2023"):
                 announcements_to_add.append(
                     AnnouncementMessage(
                         identifier=post_id,
-                        title=course_name,
+                        title=subject,
                         poster=original_poster,
                         course_name=course_name,
                         link=link,
                         post_date=datetime.fromisoformat(created),
+                        message=original_post_body,
                     )
                 )
-    print("hi")
+            else:
+                discussions_to_add.append(
+                    DiscussionPost(
+                        identifier=post_id,
+                        poster_name=original_poster,
+                        title=subject,
+                        type=msg_type,
+                        description=original_post_body,
+                        post_date=datetime.fromisoformat(created),
+                    )
+                )
+
+    add_to_database(announcements_to_add, "announcements")
+    # add_to_database(discussions_to_add, "discussions")
