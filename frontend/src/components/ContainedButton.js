@@ -3,10 +3,13 @@ import Button from "@mui/material/Button";
 
 export default function ContainedButtons(props) {
   return (
-    <Button variant="contained" onClick={() => {
-        
-    }}
-    style={{ width: props.width }}>
+    <Button
+      variant="contained"
+      onClick={() => {
+        console.log("hi");
+      }}
+      style={{ width: props.width }}
+    >
       {props.text}
     </Button>
   );

@@ -4,8 +4,6 @@ import { useState } from "react";
 import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 import { FastRewind } from "@mui/icons-material";
 
-
-
 export default function DataTable(props) {
   // const [select, setSelection] = useState(startPage); // the row that is selected needs to passed to the paper element
   return (

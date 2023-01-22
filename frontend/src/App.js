@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import DataTable from "./components/DataTable";
-import ContainedButtons from "./components/ContainedButton";
+import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import axios, { isCancel, AxiosError } from "axios";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -12,15 +12,9 @@ import ExpandedView from "./components/Expanded";
 
 function App() {
   const [view, setView] = useState("announcements");
-  const [assignment, setAssignments] = useState(refreshTable("new-assignments")); // holds all the assignments for the table
-  const [announcements, setAnnouncements] = useState(refreshTable("new-announcements")); // holds all the announcements for the table
-  // const [rows, setRows] = useState([]); // holds all the rows in the table right now
-  const [row, selectRow] = useState({
-    id: 0,
-    title: "Welcome to TODO",
-  }); // holds the row that is selected
-
-  let rows = [
+  // const [assignments, setAssignments] = useState(refreshTable("new-assignments")); // holds all the assignments for the table
+  // const [announcements, setAnnouncements] = useState(refreshTable("new-announcements")); // holds all the announcements for the table
+  const [assignments, setAssignments] = useState([
     {
       id: 2,
       course: "CPEN 212",
@@ -29,19 +23,51 @@ function App() {
       description: "pain and suffering :D",
       // completed: <CheckBoxOutlineBlankIcon />,
     },
-  ];
+  ]);
+  const [announcements, setAnnouncements] = useState([
+    {
+      id: 3,
+      course: "CPSC 221",
+      dueDate: Date.now(),
+      title: "github login",
+      description: "should be easy go to canvas",
+    },
+  ]);
+  const [rows, setRows] = useState([
+    // {
+    //   id: 2,
+    //   course: "CPEN 212",
+    //   dueDate: Date.now(),
+    //   title: "Lab 2",
+    //   description: "pain and suffering :D",
+    //   // completed: <CheckBoxOutlineBlankIcon />,
+    // },
+    // {
+    //   id: 3,
+    //   course: "CPSC 221",
+    //   dueDate: Date.now(),
+    //   title: "github login",
+    //   description: "should be easy go to canvas",
+    // },
+  ]); // holds all the rows in the table right now
+  const [row, selectRow] = useState({
+    id: 0,
+    course: "Welcome to TODO",
+    dueDate: Date.now(),
+  }); // holds the row that is selected
 
   async function refreshTable(request) {
     // request can be getall, new-announcements, new-assignments, mark-complete/<dataType>/<identifier>
-    try {
-      let result = await axios({
-        method: "GET",
-        url: `http://localhost:5000/api/${request}`,
-      });
-      // console.log(result.response.data);
-    } catch (err) {
-      // console.error(err.response.data);
-    }
+    setRows([...announcements, ...assignments]);
+    // try {
+    //   let result = await axios({
+    //     method: "GET",
+    //     url: `http://localhost:5000/api/${request}`,
+    //   });
+    //   // console.log(result.response.data);
+    // } catch (err) {
+    //   // console.error(err.response.data);
+    // }
     // .then(function (response) {
     //   console.log(response);
     //   // for (let i = 0; i < response.data.length; i++) {
@@ -62,6 +88,7 @@ function App() {
         <span style={{ padding: "40px" }}>
           <Stack direction="row" spacing={2} justifyContent="left">
             <span style={{ paddingLeft: "30px" }}>
+              {/* refreshbutton */}
               <IconButton
                 onClick={() => {
                   refreshTable(`new-${view}`);
@@ -72,20 +99,33 @@ function App() {
               </IconButton>
             </span>
             <span style={{ flexGrow: 0.5 }} />
-            <ContainedButtons
+            {/* announcement buttons */}
+            <Button
+              variant="contained"
               onClick={() => {
-                setView("announcements");
+                console.log("hi");
+                setRows(announcements);
+                console.log(announcements);
               }}
-              text="Announcement view"
-              width="200px"
-            />
-            <ContainedButtons
+              style={{
+                width: "200px",
+              }}
+            >
+              Announcement view
+            </Button>
+            {/* assignment button */}
+            <Button
+              variant="contained"
               onClick={() => {
-                setView("assignments");
+                setRows(assignments);
+                console.log(assignments);
               }}
-              text="Assignment view"
-              width="200px"
-            />
+              style={{
+                width: "200px",
+              }}
+            >
+              Assignment view
+            </Button>
           </Stack>
         </span>
       </Grid>
@@ -115,6 +155,7 @@ function App() {
           height: "100vh",
         }}
       >
+        {/* paper */}
         <ExpandedView id={0} content={row} />
       </Stack>
     </Grid>
