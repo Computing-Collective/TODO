@@ -70,6 +70,10 @@ def canvas_api(include_assignment=True, include_announcement=True):
     if include_announcement:
         for course in courses:
             course_list.append(course)
+            course_name: str = canvas.get_course_nickname(course).nickname
+            if course_name is None:
+                course_name = course.name
+            course_id_nick.update({course.id: course_name})
         announcements = canvas.get_announcements(course_list)
         for announcement in announcements:
             identifier: str = "a" + str(announcement.id)
