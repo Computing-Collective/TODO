@@ -11,7 +11,7 @@ API_URL = "https://ubc.instructure.com"
 
 sys.path.append('../')
 
-from backend.database.models import Assignment, AnnouncementMessage
+from backend.database.models import Assignment, AnnouncementMessage, Course
 from backend.database.queries import add_to_database
 
 

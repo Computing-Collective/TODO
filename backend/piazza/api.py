@@ -19,7 +19,7 @@ p = Piazza()
 p.user_login(os.getenv("PIAZZA_USER"), os.getenv("PIAZZA_PW"))
 
 
-def piazza(term="Winter Term 2 2023"):
+def piazza_api(term="Winter Term 2 2023"):
     """
     gets data from piazza and posts it to the database. the term must be in form: "Winter Term {t} {yyyy}"
     this will get all the data from winter term 2 2023 for example
@@ -72,12 +72,12 @@ def piazza(term="Winter Term 2 2023"):
             if instructor_note:
                 announcements_to_add.append(
                     AnnouncementMessage(
-                        identifier=post_id,
+                        identifier="p" + post_id,
                         title=subject,
-                        poster=original_poster,
-                        course_name=course_name,
+                        poster_name=original_poster,
+                        course=course_name,
                         link=link,
-                        post_date=datetime.fromisoformat(created),
+                        post_date=datetime.datetime.fromisoformat(created),
                         message=original_post_body,
                     )
                 )
@@ -87,11 +87,15 @@ def piazza(term="Winter Term 2 2023"):
                         identifier=post_id,
                         poster_name=original_poster,
                         title=subject,
-                        type=msg_type,
+                        post_type=msg_type,
                         description=original_post_body,
-                        post_date=datetime.fromisoformat(created),
+                        post_date=datetime.datetime.fromisoformat(created),
                     )
                 )
 
     add_to_database(announcements_to_add, "announcements")
     # add_to_database(discussions_to_add, "discussions")
+
+
+if __name__ == "__main__":
+    piazza_api()
