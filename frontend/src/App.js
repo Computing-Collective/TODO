@@ -7,7 +7,6 @@ import Stack from "@mui/material/Stack";
 import axios, { isCancel, AxiosError } from "axios";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from "@mui/material/IconButton";
-import refreshPage from "./functions/refresh";
 
 function App() {
   return (
@@ -66,16 +65,29 @@ function App() {
 
 export default App;
 
-const rows = [
+let rows = [
   { id: 1, lastName: "Snow", firstName: "Jon", description: 35 },
   {
     id: 2,
     course: "CPEN 212",
     dueDate: Date.now(),
-    title: "Lab 2",
-    description: "pain and suffering :D",
+    title: "Lab 2",    description: "pain and suffering :D",
     // completed: <CheckBoxOutlineBlankIcon />,
   },
 ];
 
-
+function refreshPage() {
+  axios({
+    method: "GET",
+    url:"http://localhost:5000/getall",
+  })
+  .then(
+    function (response) {
+      for (let i = 0; i < response.data.length; i++) {
+        console.log(response.data[i]);
+      }
+      rows = response.data;
+      console.log(rows);
+    }
+  )
+}
