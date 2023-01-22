@@ -15,7 +15,7 @@ from backend.database.models import Assignment, AnnouncementMessage, Course
 from backend.database.queries import add_to_database
 
 
-def canvas_api():
+def canvas_api():  # TODO: add flag to specify which data we are grabbing
     canvas = Canvas(API_URL, API_TOKEN)
 
     # course = canvas.get_announcements(#course ids)
@@ -34,13 +34,13 @@ def canvas_api():
 
     for course in courses:
         course_list.append(course)
-        name: str = canvas.get_course_nickname(course).nickname
-        if name is None:
-            name = course.name
-        course_id_nick.update({course.id: name})
+        course_name: str = canvas.get_course_nickname(course).nickname
+        if course_name is None:
+            course_name = course.name
+        course_id_nick.update({course.id: course_name})
         course_code_arr = course.course_code.split(" ")
         if len(course_code_arr) > 1:
-            courses_to_add.append(Course(course_code_arr[0] + " " + course_code_arr[1], name))
+            courses_to_add.append(Course(course_code_arr[0] + " " + course_code_arr[1], course_name))
         assignments = course.get_assignments()
         for assignment in assignments:
             identifier = str(assignment.id)
@@ -58,7 +58,7 @@ def canvas_api():
             # submission_dl_url:str = assignment.submission_download_url
             submission_status: bool = assignment.has_submitted_submissions
             assignments_to_add.append(
-                Assignment(identifier, name, link, due_date, lock_date, title, False, submission_status, description))
+                Assignment(identifier, course_name, link, due_date, lock_date, title, False, submission_status, description))
 
     announcements = canvas.get_announcements(course_list)
     for announcement in announcements:

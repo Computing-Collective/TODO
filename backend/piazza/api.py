@@ -19,7 +19,7 @@ p = Piazza()
 p.user_login(os.getenv("PIAZZA_USER"), os.getenv("PIAZZA_PW"))
 
 
-def piazza_api(term="Winter Term 2 2023"):
+def piazza_api(term="Winter Term 2 2023"):  # TODO: add flag to specify which data we are grabbing
     """
     gets data from piazza and posts it to the database. the term must be in form: "Winter Term {t} {yyyy}"
     this will get all the data from winter term 2 2023 for example

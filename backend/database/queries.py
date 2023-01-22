@@ -13,33 +13,8 @@ conn_str = f"mongodb+srv://{MONGO_DB_USER}:{MONGO_DB_PASSWORD}@cluster0.c7qgqmn.
 client = MongoClient(conn_str, server_api=ServerApi('1'), serverSelectionTimeoutMS=5000)
 db = client.school
 
-
-def getAll():
-    """Returns all data - assignments and announcements
-    # TODO: add more info
-    """
-    
-    
-def getNewAssignment():
-    """Returns new assignments since last retrieval
-    # TODO: add more info
-    """
-
-
-def getNewAnnouncement():
-    """Returns new announcements since last retrieval
-    # TODO: add more info
-    """
-
-
-def markComplete(id: str, type: str):
-    """Marks an assignment or announcement as complete
-    This would remove it from the active assignments/announcements list
-
-    Args:
-        id (str): id of the assignment or announcement
-        type (str): one of assignment or announcement
-    """
+new_announcements = []
+new_assignments = []
 
 
 def add_to_database(data: list, data_type: str):
@@ -58,7 +33,7 @@ def add_to_database(data: list, data_type: str):
             if collection.count_documents({"id": item.id}) == 0:
                 obj = {
                     "id": item.id,
-                    "name": item.name,
+                    "course_name": item.course_name,
                     "link": item.link,
                     "due_date": item.due_date,
                     "lock_date": item.lock_date,
@@ -68,6 +43,7 @@ def add_to_database(data: list, data_type: str):
                     "description": item.description
                 }
                 collection.insert_one(obj)
+                new_assignments.append(obj)
     elif data_type == "announcements":
         collection = db.announcements
         for item in data:
@@ -82,6 +58,7 @@ def add_to_database(data: list, data_type: str):
                     "post_date": item.post_date
                 }
                 collection.insert_one(obj)
+                new_announcements.append(obj)
     elif data_type == "courses":
         collection = db.courses
         for item in data:

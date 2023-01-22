@@ -1,11 +1,18 @@
 from datetime import datetime
 
 
+class Course:
+    def __init__(self, course_name: str, nickname: str):
+        self.course_name = course_name
+        self.nickname = nickname
+
+
 class Assignment:
-    def __init__(self, identifier: str, name: str, link: str, due_date: datetime, lock_date: datetime, title: str,
+    def __init__(self, identifier: str, course_name: str, link: str, due_date: datetime, lock_date: datetime,
+                 title: str,
                  manual_status: bool, canvas_status: bool, description: str):
         self.id = identifier
-        self.name = name
+        self.course_name = course_name
         self.link = link
         self.due_date = due_date
         self.lock_date = lock_date
@@ -36,9 +43,3 @@ class DiscussionPost:
         self.type = post_type
         self.description = description
         self.post_date = post_date
-
-
-class Course:
-    def __init__(self, course_name: str, nickname: str):
-        self.course_name = course_name
-        self.nickname = nickname
