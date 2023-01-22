@@ -15,7 +15,7 @@ from backend.database.models import Assignment, AnnouncementMessage, Course
 from backend.database.queries import add_to_database
 
 
-def canvas_api(include_assignment=True, include_announcement=True):  # TODO: add flag to specify which data we are grabbing
+def canvas_api(include_assignment=True, include_announcement=True):
     """Fetches data from Canvas API and adds it to the database.
 
     Args:
@@ -68,6 +68,8 @@ def canvas_api(include_assignment=True, include_announcement=True):  # TODO: add
         add_to_database(courses_to_add, "courses")
 
     if include_announcement:
+        for course in courses:
+            course_list.append(course)
         announcements = canvas.get_announcements(course_list)
         for announcement in announcements:
             identifier: str = "a" + str(announcement.id)
@@ -77,8 +79,12 @@ def canvas_api(include_assignment=True, include_announcement=True):  # TODO: add
             title: str = announcement.title
             poster: str = announcement.user_name
             course_name: str = course_id_nick.get(int(announcement.context_code.split('_')[1]))
+            if announcement.read_state == "read":
+                mark_read = True
+            else:
+                mark_read = False
             announcements_to_add.append(
-                AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
+                AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at, mark_read))
 
         for mail in conversations:
             identifier: str = "m" + str(mail.id)
@@ -88,9 +94,13 @@ def canvas_api(include_assignment=True, include_announcement=True):  # TODO: add
             title: str = mail.subject
             poster: str = mail.participants[0]["name"]
             course_name: str = course_id_nick.get(int(mail.context_code.split("_")[1]))
+            if mail.workflow_state == "read":
+                mark_read = True
+            else:
+                mark_read = False
             announcements_to_add.append(
-                AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
-        
+                AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at, mark_read))
+
         add_to_database(announcements_to_add, "announcements")
 
 

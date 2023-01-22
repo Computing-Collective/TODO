@@ -24,7 +24,7 @@ class Assignment:
 
 class AnnouncementMessage:
     def __init__(self, identifier: str, title: str, poster_name: str, course: str, link: str, message: str,
-                 post_date: datetime):
+                 post_date: datetime, mark_read: bool):
         self.id = identifier
         self.title = title
         self.poster_name = poster_name
@@ -32,6 +32,7 @@ class AnnouncementMessage:
         self.link = link
         self.message = message
         self.post_date = post_date
+        self.mark_read = mark_read
 
 
 class DiscussionPost:

@@ -81,6 +81,7 @@ def piazza_api(include_discussions=False, term="Winter Term 2 2023"):
                         link=link,
                         post_date=datetime.datetime.fromisoformat(created),
                         message=original_post_body,
+                        mark_read=False,
                     )
                 )
             else:
