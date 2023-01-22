@@ -68,10 +68,6 @@ def canvas_api():
         message: str = mail.last_message  # message is truncated
         posted_at: datetime.datetime = mail.last_message_at_date
         title: str = mail.subject
-        poster: str = mail.participants[0]['name']
-        course_name: str = course_nick.get(int(mail.context_code.split('_')[1]))
+        poster: str = mail.participants[0]["name"]
+        course_name: str = course_nick.get(int(mail.context_code.split("_")[1]))
         announcements_to_add.append(AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
-
-
-if __name__ == "__main__":
-    canvas_api()
