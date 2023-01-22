@@ -14,7 +14,44 @@ client = MongoClient(conn_str, server_api=ServerApi('1'), serverSelectionTimeout
 db = client.school
 
 
+def getAll():
+    """Returns all data - assignments and announcements
+    # TODO: add more info
+    """
+    
+    
+def getNewAssignment():
+    """Returns new assignments since last retrieval
+    # TODO: add more info
+    """
+
+
+def getNewAnnouncement():
+    """Returns new announcements since last retrieval
+    # TODO: add more info
+    """
+
+
+def markComplete(id: str, type: str):
+    """Marks an assignment or announcement as complete
+    This would remove it from the active assignments/announcements list
+
+    Args:
+        id (str): id of the assignment or announcement
+        type (str): one of assignment or announcement
+    """
+
+
 def add_to_database(data: list, data_type: str):
+    """Adds data to the database
+
+    Args:
+        data (list): List of data for the given type (differnt for each type)
+                     Assignmenr: id, name, link, due_date, lock_date, title, manual_status, canvas_status, description
+                     Announcement: id, title, poster_name, course, link, message, post_date
+                     Course: course_name, nickname
+        data_type (str): one of assignments, announcements, or courses
+    """
     if data_type == "assignments":
         collection = db.assignments
         for item in data:
@@ -54,3 +91,10 @@ def add_to_database(data: list, data_type: str):
                     "nickname": item.nickname
                 }
                 collection.insert_one(obj)
+
+
+def get_from_database():
+    """Gets all data from the database, returns as a dictionary
+    
+    # TODO: add description of dictionary
+    """
