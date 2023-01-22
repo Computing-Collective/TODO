@@ -2,6 +2,8 @@ from canvasapi import Canvas
 import dotenv
 import os
 import datetime
+from database.models import Assignment, AnnouncementMessage
+from database.queries import add_to_database
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -41,19 +43,31 @@ for course in courses:
         # submission_dl_url:str = assignment.submission_download_url
         submission_status: bool = assignment.has_submitted_submissions
 
-announcements = canvas.get_announcements(course_list)
-for announcement in announcements:
-    link: str = announcement.html_url
-    message: str = announcement.message
-    posted_at: datetime.datetime = announcement.posted_at_date
-    title: str = announcement.title
-    poster: str = announcement.user_name
-    course_name: str = course_nick.get(int(announcement.context_code.split("_")[1]))
+    announcements = canvas.get_announcements(course_list)
+    for announcement in announcements:
+        identifier: str = "a" + str(announcement.id)
+        link: str = announcement.html_url
+        message: str = announcement.message
+        posted_at: datetime.datetime = announcement.posted_at_date
+        title: str = announcement.title
+        poster: str = announcement.user_name
+        course_name: str = course_nick.get(int(announcement.context_code.split('_')[1]))
+        announcements_to_add.append(
+            AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
 
-for mail in conversations:
-    # link: str = mail. # link doesn't exist
-    message: str = mail.last_message  # message is truncated
-    posted_at: datetime.datetime = mail.last_message_at_date
-    title: str = mail.subject
-    poster: str = mail.participants[0]["name"]
-    course_name: str = course_nick.get(int(mail.context_code.split("_")[1]))
+    for mail in conversations:
+        identifier: str = "m" + str(mail.id)
+        link: str = API_URL + "/conversations"
+        message: str = mail.last_message  # message is truncated
+        posted_at: datetime.datetime = mail.last_message_at_date
+        title: str = mail.subject
+        poster: str = mail.participants[0]["name"]
+        course_name: str = course_nick.get(int(mail.context_code.split("_")[1]))
+        announcements_to_add.append(
+            AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
+
+    add_to_database(assignments_to_add, "assignments")
+
+
+if __name__ == "__main__":
+    canvas_api()
