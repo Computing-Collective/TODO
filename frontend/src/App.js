@@ -4,32 +4,49 @@ import DataTable from "./components/DataTable";
 import ContainedButtons from "./components/ContainedButton";
 import OutlinedButton from "./components/OutlinedButton";
 import Stack from "@mui/material/Stack";
+import axios, { isCancel, AxiosError } from "axios";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import IconButton from "@mui/material/IconButton";
+import refreshPage from "./functions/refresh";
 
 function App() {
   return (
-    <Grid container>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        {/* Buttons */}
+        <span style={{ padding: "40px" }}>
+          <Stack direction="row" spacing={2} justifyContent="left">
+            <span>
+              <IconButton
+                onClick={() => {
+                  refreshPage();
+                }}
+                aria-label="refresh"
+                style={{}}
+              >
+                <RefreshIcon />
+              </IconButton>
+            </span>
+            <span style={{ flexGrow: 0.5 }} />
+            <ContainedButtons text="Announcement view" width="200px" />
+            <ContainedButtons text="Assignment view" width="200px" />
+          </Stack>
+        </span>
+      </Grid>
       {/* Left */}
       <Stack
         alignItems="center"
         className="LeftContainer"
         direction="column"
-        spacing={1}
+        spacing={2}
         style={{
-          backgroundColor: "#875C74",
+          backgroundColor: "",
           overflowY: "hidden",
           width: "50vw",
         }}
       >
-        {/* Buttons */}
-        <span style={{ padding: "40px" }}>
-          <Stack direction="row" spacing={2}>
-            <ContainedButtons text="Normal view" width="200px" />
-            <ContainedButtons text="Course view" width="200px" />
-          </Stack>
-        </span>
-
         {/* Table */}
-        <DataTable cols={cols} rows={rows} />
+        <DataTable rows={rows} />
       </Stack>
 
       {/* Right */}
@@ -49,38 +66,16 @@ function App() {
 
 export default App;
 
-const cols = [
-  { field: "id", headerName: "ID", width: 10 },
-  { field: "firstName", headerName: "First name", width: 130 },
-  { field: "lastName", headerName: "Last name", width: 130 },
-  { field: "age", headerName: "Age", type: "number", width: 90 },
+const rows = [
+  { id: 1, lastName: "Snow", firstName: "Jon", description: 35 },
   {
-    field: "fullName",
-    headerName: "Full name",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
-    width: 160,
-    valueGetter: (params) => `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+    id: 2,
+    course: "CPEN 212",
+    dueDate: Date.now(),
+    title: "Lab 2",
+    description: "pain and suffering :D",
+    // completed: <CheckBoxOutlineBlankIcon />,
   },
-  { field: "link", headerName: "Link", width: 130 },
 ];
 
-const rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", age: 35 },
-  { id: 2, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 3, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 4, lastName: "Stark", firstName: "Arya", age: 16, link: null },
-  { id: 5, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 6, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 7, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 8, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 9, lastName: "Roxie", firstName: "Harvey", age: 65 },
-  { id: 10, lastName: "Lannister", firstName: "Cersei", age: 42 },
-  { id: 11, lastName: "Lannister", firstName: "Jaime", age: 45 },
-  { id: 12, lastName: "Stark", firstName: "Arya", age: 16 },
-  { id: 13, lastName: "Targaryen", firstName: "Daenerys", age: null },
-  { id: 14, lastName: "Melisandre", firstName: null, age: 150 },
-  { id: 15, lastName: "Clifford", firstName: "Ferrara", age: 44 },
-  { id: 16, lastName: "Frances", firstName: "Rossini", age: 36 },
-  { id: 17, lastName: "Roxie", firstName: "Harvey", age: 65 },
-];
+
