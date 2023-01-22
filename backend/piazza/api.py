@@ -1,6 +1,7 @@
 from piazza_api import Piazza
 import os
 import dotenv
+import time
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -18,13 +19,31 @@ for clas in classes:
 
 for id, name in class_id_name_dict.items():
     course = p.network(id)
-    feed = course.iter_all_posts(limit=50)
+    feed = course.iter_all_posts(limit=10)
     for post in feed:
-        id: str = post["id"]  # post id
-        folders: list = post["folders"]
-        bucket_name: str = post["bucket_name"]  #
-        created: str = post["created"]  # time created ISO 691? '2023-01-20T17:58:27Z'
-        type_of_post: str = post["type"]  # question, note
+        # announcement or no?
+        instructor_note: bool = "instructor-note" in post["tags"]
+        # unique id
+        post_id: str = "p" + post["id"]  # post id
+        # created time
+        created: str = post[
+            "created"
+        ]  # time created ISO 691? '2023-01-20T17:58:27Z' as a **string**
         original_post_body: str = post["history"][0]["content"]  # in html format
+        post_id = post["change_log"][0]["data"]
+
+        # get post name
+        if post["history"][0]["anon"] == "no":
+            user_id = post["history"][0]["uid"]
+            user = course.get_users([user_id])
+            original_post_name: str = user[0]["name"]
+        else:
+            original_post_name = "Anonymous"
+
         subject: str = post["history"][0]["subject"]
-        course_name = name
+        # get course
+        course_arr = name.split(" ")  # TODO: get course from database
+        course_name = course_arr[0] + " " + course_arr[1]
+        # get link
+        post_num: int = post["nr"]
+        link: str = f"https://piazza.com/class/{id}/post/{post_num}"

@@ -18,13 +18,20 @@ conversations = canvas.get_conversations()
 # calendar = canvas.get_epub_exports()
 
 course_list = []
-course_nick = {}
+course_id_nick_dict = {}
+course_code_nick_dict = {}
 for course in courses:
     course_list.append(course)
     name: str = canvas.get_course_nickname(course).nickname
     if name == None:
         name = course.name
-    course_nick.update({course.id: name})
+
+    course_id_nick_dict.update({course.id: name})
+    course_code_arr = course.course_code.split(" ")
+    course_code_nick_dict.update(
+        {course_code_arr[0] + " " + course_code_arr[1]: name}
+    )  # TODO: post to database
+
     assignments = course.get_assignments()
     for assignment in assignments:
         link: str = assignment.html_url
@@ -48,7 +55,9 @@ for announcement in announcements:
     posted_at: datetime.datetime = announcement.posted_at_date
     title: str = announcement.title
     poster: str = announcement.user_name
-    course_name: str = course_nick.get(int(announcement.context_code.split("_")[1]))
+    course_name: str = course_id_nick_dict.get(
+        int(announcement.context_code.split("_")[1])
+    )
 
 for mail in conversations:
     # link: str = mail. # link doesn't exist
@@ -56,4 +65,4 @@ for mail in conversations:
     posted_at: datetime.datetime = mail.last_message_at_date
     title: str = mail.subject
     poster: str = mail.participants[0]["name"]
-    course_name: str = course_nick.get(int(mail.context_code.split("_")[1]))
+    course_name: str = course_id_nick_dict.get(int(mail.context_code.split("_")[1]))
