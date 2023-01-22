@@ -11,7 +11,7 @@ from backend.database.models import (
     AnnouncementMessage,
     DiscussionPost,
 )  # TODO: add discussions
-from backend.database.queries import add_to_database
+from backend.database.queries import add_to_database, get_course_nickname
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -64,8 +64,9 @@ def piazza_api(include_discussions=False, term="Winter Term 2 2023"):
 
             subject: str = post["history"][0]["subject"]
             # get course
-            course_arr = name.split(" ")  # TODO: get course from database
+            course_arr = name.split(" ")
             course_name = course_arr[0] + " " + course_arr[1]
+            course_name = get_course_nickname(course_name)
             # get link
             post_num: int = post["nr"]
             link: str = f"https://piazza.com/class/{id}/post/{post_num}"
@@ -79,7 +80,8 @@ def piazza_api(include_discussions=False, term="Winter Term 2 2023"):
                         poster_name=original_poster,
                         course=course_name,
                         link=link,
-                        post_date=datetime.datetime.fromisoformat(created[:19]), # remove the last char to fit iso format
+                        # remove the last char to fit iso format
+                        post_date=datetime.datetime.fromisoformat(created[:19]),
                         message=original_post_body,
                         mark_read=False,
                     )
@@ -93,7 +95,8 @@ def piazza_api(include_discussions=False, term="Winter Term 2 2023"):
                             title=subject,
                             post_type=msg_type,
                             description=original_post_body,
-                            post_date=datetime.datetime.fromisoformat(created[:19]), # remove the last char to fit iso format
+                            # remove the last char to fit iso format
+                            post_date=datetime.datetime.fromisoformat(created[:19]),
                         )
                     )
 

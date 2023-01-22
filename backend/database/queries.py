@@ -64,12 +64,23 @@ def add_to_database(data: list, data_type: str):
     elif data_type == "courses":
         collection = db.courses
         for item in data:
-            if collection.count_documents({"course_name": item.course_name}) == 0:
-                obj = {
-                    "course_name": item.course_name,
-                    "nickname": item.nickname
-                }
-                collection.insert_one(obj)
+            if collection.count_documents({"nickname": item.nickname}) == 0:
+                if collection.count_documents({"course_name": item.course_name}) == 0:
+                    obj = {
+                        "course_name": item.course_name,
+                        "nickname": item.nickname
+                    }
+                    collection.insert_one(obj)
+                else:
+                    collection.update_one({"course_name": item.course_name}, {'$set': {"nickname": item.nickname}})
+
+
+def get_course_nickname(code: str):
+    """Given a course code, returns the nickname set in Canvas
+    for the course
+    """
+    result = db.courses.find_one({"course_name": code})
+    return result['nickname']
 
 
 def get_from_database() -> dict:
