@@ -3,6 +3,7 @@ import dotenv
 import os
 import datetime
 from database.models import Assignment, AnnouncementMessage
+from database.queries import add_to_database
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -60,7 +61,8 @@ def canvas_api():
         title: str = announcement.title
         poster: str = announcement.user_name
         course_name: str = course_nick.get(int(announcement.context_code.split('_')[1]))
-        announcements_to_add.append(AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
+        announcements_to_add.append(
+            AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
 
     for mail in conversations:
         identifier: str = "m" + str(mail.id)
@@ -70,7 +72,10 @@ def canvas_api():
         title: str = mail.subject
         poster: str = mail.participants[0]["name"]
         course_name: str = course_nick.get(int(mail.context_code.split("_")[1]))
-        announcements_to_add.append(AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
+        announcements_to_add.append(
+            AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
+
+    add_to_database(assignments_to_add, "assignments")
 
 
 if __name__ == "__main__":
