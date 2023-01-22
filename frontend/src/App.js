@@ -23,6 +23,7 @@ function App() {
       setAssignments(response.data.assignments);
       setAnnouncements(response.data.announcements);
       // console.log(response.data);
+      setRows([...announcements, ...assignments]);
     });
   }, [refresh]);
 
@@ -47,7 +48,7 @@ function App() {
   //     description: "should be easy go to canvas",
   //   },
   // ]);
-  const [rows, setRows] = useState([...announcements, ...assignments]);// ]); // holds all the rows in the table right now
+  const [rows, setRows] = useState([]);// ]); // holds all the rows in the table right now
   const [row, selectRow] = useState({
     id: 0,
     course: "Welcome to TODO",
@@ -151,7 +152,7 @@ function App() {
           spacing={2}
         >
           {/* Table */}
-          <DataTable rows={rows} tableToPaper={tableToPaper} />
+          <DataTable rows={rows} tableToPaper={tableToPaper} view={view} />
         </Stack>
       </Grid>
       <Grid item xs={6} 

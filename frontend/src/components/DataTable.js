@@ -6,10 +6,25 @@ import { FastRewind } from "@mui/icons-material";
 
 export default function DataTable(props) {
   // const [select, setSelection] = useState(startPage); // the row that is selected needs to passed to the paper element
+  const newRows = []
+  var id = 1;
+  if (props.view === "announcements") {
+    for (let row in props.rows) {
+      newRows.push(new Map([
+        ["id", id++],
+        ["dueDate", row.post_date],
+        ["title", row.title],
+        ["description", row.message],
+        ["course", row.course]
+      ]))
+    }
+  } else if (props.view === 'assignments') {
+  
+  }
   return (
     <div style={{ height: "80vh", width: "90%" }}>
       <DataGrid
-        rows={props.rows}
+        rows={props.view ==="assignments" ? props.rows : newRows}
         columns={[
           { field: "dueDate", headerName: "Due Date", type: "date", editable: true },
           { field: "course", headerName: "Course", editable: true },
