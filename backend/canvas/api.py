@@ -71,3 +71,7 @@ def canvas_api():
         poster: str = mail.participants[0]["name"]
         course_name: str = course_nick.get(int(mail.context_code.split("_")[1]))
         announcements_to_add.append(AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
+
+
+if __name__ == "__main__":
+    canvas_api()

@@ -25,3 +25,20 @@ class AnnouncementMessage:
         self.link = link
         self.message = message
         self.post_date = post_date
+
+
+class DiscussionPost:
+    def __init__(self, identifier: str, poster_name: str, title: str, post_type: str, description: str,
+                 post_date: datetime):
+        self.id = identifier
+        self.poster_name = poster_name
+        self.title = title
+        self.type = post_type
+        self.description = description
+        self.post_date = post_date
+
+
+class Course:
+    def __init__(self, course_name: str, nickname: str):
+        self.course_name = course_name
+        self.nickname = nickname
