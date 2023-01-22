@@ -24,6 +24,14 @@ export default function DataTable(props) {
             headerName: "",
           },
         ]}
+        sx={{
+          backgroundColor: "#141204",
+          color: "white",
+          "& .MuiSvgIcon-root, .MuiTablePagination-root, .MuiSelect-select, .MuiTablePagination-actions":
+            {
+              color: "white",
+            },
+        }}
       />
     </div>
   );

@@ -7,8 +7,8 @@ import Stack from "@mui/material/Stack";
 import axios, { isCancel, AxiosError } from "axios";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from "@mui/material/IconButton";
-import refreshPage from "./functions/refresh";
 import { Announcement } from "@mui/icons-material";
+import { red } from "@mui/material/colors";
 
 function App() {
   const [view, setView] = useState("announcements");
@@ -32,7 +32,7 @@ function App() {
                 aria-label="refresh"
                 style={{}}
               >
-                <RefreshIcon />
+                <RefreshIcon sx={{ color: "white" }} />
               </IconButton>
             </span>
             <span style={{ flexGrow: 0.5 }} />
@@ -60,13 +60,12 @@ function App() {
         direction="column"
         spacing={2}
         style={{
-          backgroundColor: "",
           overflowY: "hidden",
           width: "50vw",
         }}
       >
         {/* Table */}
-        <DataTable rows={rows} />
+        <DataTable rows={rows} style={{}} />
       </Stack>
 
       {/* Right */}
@@ -97,3 +96,9 @@ const rows = [
     // completed: <CheckBoxOutlineBlankIcon />,
   },
 ];
+
+// const darkTheme = createTheme({
+//   palette: {
+//     mode: "dark",
+//   },
+// });
