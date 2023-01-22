@@ -2,13 +2,17 @@ from canvasapi import Canvas
 import dotenv
 import os
 import datetime
-from database.models import Assignment, AnnouncementMessage, Course
-from database.queries import add_to_database
+import sys
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 API_TOKEN = os.environ.get("CANVAS_API_TOKEN")
 API_URL = "https://ubc.instructure.com"
+
+sys.path.append('../')
+
+from backend.database.models import Assignment, AnnouncementMessage
+from backend.database.queries import add_to_database
 
 
 def canvas_api():

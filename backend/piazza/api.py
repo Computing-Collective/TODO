@@ -2,13 +2,16 @@ from piazza_api import Piazza
 import os
 import dotenv
 import datetime
+import sys
 
-from database.models import (
+sys.path.append('../')
+
+from backend.database.models import (
     Assignment,
     AnnouncementMessage,
     DiscussionPost,
 )  # TODO: add discussions
-from database.queries import add_to_database
+from backend.database.queries import add_to_database
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
