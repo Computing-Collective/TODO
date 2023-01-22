@@ -1,6 +1,5 @@
 from datetime import datetime
 
-
 class Course:
     def __init__(self, course_name: str, nickname: str):
         self.course_name = course_name

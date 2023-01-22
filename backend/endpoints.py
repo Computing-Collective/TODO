@@ -10,7 +10,10 @@ from backend.canvas.api import canvas_api
 from backend.piazza.api import piazza_api
 from backend.database.queries import get_from_database, mark_complete_database, new_assignments, new_announcements
 
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/api/new-assignments")
@@ -61,4 +64,4 @@ def mark_complete(identifier: str, data_type: str):
 
 
 if __name__ == "__main__":
-    app.run(port=8080)
+    app.run(port=5000)

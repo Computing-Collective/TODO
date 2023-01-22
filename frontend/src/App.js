@@ -94,7 +94,7 @@ function App() {
 
 export default App;
 
-const rows = [
+let rows = [
   { id: 1, lastName: "Snow", firstName: "Jon", description: 35 },
   {
     id: 2,
@@ -107,3 +107,19 @@ const rows = [
     // completed: <CheckBoxOutlineBlankIcon />,
   },
 ];
+
+function refreshPage() {
+  axios({
+    method: "GET",
+    url:"http://localhost:5000/getall",
+  })
+  .then(
+    function (response) {
+      for (let i = 0; i < response.data.length; i++) {
+        console.log(response.data[i]);
+      }
+      rows = response.data;
+      console.log(rows);
+    }
+  )
+}
