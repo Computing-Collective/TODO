@@ -48,13 +48,12 @@ for announcement in announcements:
     posted_at: datetime.datetime = announcement.posted_at_date
     title: str = announcement.title
     poster: str = announcement.user_name
-    course_name: str = course_nick.get(str(announcement._parent_id))
+    course_name: str = course_nick.get(int(announcement.context_code.split("_")[1]))
 
 for mail in conversations:
     # link: str = mail. # link doesn't exist
-    message: str = mail.last_message # message is truncated
+    message: str = mail.last_message  # message is truncated
     posted_at: datetime.datetime = mail.last_message_at_date
     title: str = mail.subject
-    poster: str = mail.participants[0]['name']
-    course_name: str = course_nick.get(int(mail.context_code.split('_')[1]))
-
+    poster: str = mail.participants[0]["name"]
+    course_name: str = course_nick.get(int(mail.context_code.split("_")[1]))
