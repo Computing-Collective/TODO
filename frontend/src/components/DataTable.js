@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import { TableContainer } from '@mui/material';
 
 
 
@@ -9,7 +10,6 @@ export default function DataTable(props) {
             <DataGrid
                 rows={props.rows}
                 columns={props.cols}
-                checkboxSelection
             />
         </div>
     );
