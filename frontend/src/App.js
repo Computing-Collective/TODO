@@ -1,12 +1,27 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import DataTable from './components/DataTable';
+import ContainedButtons from './components/ContainedButton';
+import Stack from '@mui/material/Stack';
 
 function App() {
 
     return (
         <Grid container>
-            <Grid className='mainLeftContainer' item xs={6} style={{ backgroundColor: 'grey', overflowY: 'scroll', height: '100vh' }}>
+            {/* Left */}
+            <Stack className='LeftContainer' direction="column" spacing={2} style={{ backgroundColor: 'grey', overflowY: 'hidden', width: '50vw', height: '100vh'}}>
+
+                {/* Buttons */}
+                <Stack direction='row' spacing={2}>
+                    <ContainedButtons 
+                        text='Normal view'
+                        width='200px'
+                    />
+                    <ContainedButtons 
+                        text='Course view'
+                        width='200px'
+                    />
+                </Stack>
 
 
                 {/* Table */}
@@ -14,10 +29,12 @@ function App() {
                     cols={tempColumns}
                     rows={tempRows}
                 />
-            </Grid>
-            <Grid className='mainLeftContainer' item xs={6} style={{ backgroundColor: 'cyan', overflowY: 'scroll', height: '100vh' }}>
+            </Stack>
 
-            </Grid>
+            {/* Right */}
+            <Stack className='RightContainer' direction="column" spacing={2} style={{ backgroundColor: 'cyan', overflowY: 'scroll', width: '50vw', height: '100vh'}}>
+
+            </Stack>
         </Grid>
     );
 }
@@ -25,15 +42,10 @@ function App() {
 export default App;
 
 const tempColumns = [
-    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'id', headerName: 'ID', width: 10 },
     { field: 'firstName', headerName: 'First name', width: 130 },
     { field: 'lastName', headerName: 'Last name', width: 130 },
-    {
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
-        width: 90,
-    },
+    { field: 'age', headerName: 'Age', type: 'number', width: 90 },
     {
         field: 'fullName',
         headerName: 'Full name',
