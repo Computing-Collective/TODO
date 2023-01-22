@@ -31,3 +31,26 @@ def add_to_database(data: list, data_type: str):
                     "description": item.description
                 }
                 collection.insert_one(obj)
+    elif data_type == "announcements":
+        collection = db.announcements
+        for item in data:
+            if collection.count_documents({"id": item.id}) == 0:
+                obj = {
+                    "id": item.id,
+                    "title": item.title,
+                    "poster_name": item.poster_name,
+                    "course": item.course,
+                    "link": item.link,
+                    "message": item.message,
+                    "post_date": item.post_date
+                }
+                collection.insert_one(obj)
+    elif data_type == "courses":
+        collection = db.courses
+        for item in data:
+            if collection.count_documents({"course_name": item.course_name}) == 0:
+                obj = {
+                    "course_name": item.course_name,
+                    "nickname": item.nickname
+                }
+                collection.insert_one(obj)
