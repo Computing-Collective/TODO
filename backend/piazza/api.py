@@ -79,7 +79,7 @@ def piazza_api(include_discussions=False, term="Winter Term 2 2023"):
                         poster_name=original_poster,
                         course=course_name,
                         link=link,
-                        post_date=datetime.datetime.fromisoformat(created),
+                        post_date=datetime.datetime.fromisoformat(created[:19]), # remove the last char to fit iso format
                         message=original_post_body,
                         mark_read=False,
                     )
@@ -93,7 +93,7 @@ def piazza_api(include_discussions=False, term="Winter Term 2 2023"):
                             title=subject,
                             post_type=msg_type,
                             description=original_post_body,
-                            post_date=datetime.datetime.fromisoformat(created),
+                            post_date=datetime.datetime.fromisoformat(created[:19]), # remove the last char to fit iso format
                         )
                     )
 
