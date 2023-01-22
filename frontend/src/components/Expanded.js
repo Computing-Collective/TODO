@@ -32,6 +32,7 @@ export default function ExpandedView(props) {
       style={{
         backgroundColor: "inherit",
         color: "white",
+        width: "92%",
       }}
     >
       <div

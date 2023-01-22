@@ -42,7 +42,7 @@ function App() {
       description: "should be easy go to canvas",
     },
   ]);
-  const [rows, setRows] = useState([
+  const [rows, setRows] = useState([...announcements, ...assignments]);
     // {
     //   id: 2,
     //   course: "CPEN 212",
@@ -58,7 +58,7 @@ function App() {
     //   title: "github login",
     //   description: "should be easy go to canvas",
     // },
-  ]); // holds all the rows in the table right now
+  // ]); // holds all the rows in the table right now
   const [row, selectRow] = useState({
     id: 0,
     course: "Welcome to TODO",
@@ -109,14 +109,12 @@ function App() {
                 <RefreshIcon sx={{ color: "white" }} />
               </IconButton>
             </span>
-            <span style={{ flexGrow: 0.5 }} />
+            <span style={{ flexGrow: 0.43 }} />
             {/* announcement buttons */}
             <Button
               variant="contained"
               onClick={() => {
-                console.log("hi");
                 setRows(announcements);
-                console.log(announcements);
               }}
               style={{
                 width: "200px",
@@ -129,7 +127,6 @@ function App() {
               variant="contained"
               onClick={() => {
                 setRows(assignments);
-                console.log(assignments);
               }}
               style={{
                 width: "200px",
@@ -140,35 +137,39 @@ function App() {
           </Stack>
         </span>
       </Grid>
-      {/* Left */}
-      <Stack
-        alignItems="center"
-        className="LeftContainer"
-        direction="column"
-        spacing={2}
+      <Grid item xs={6} 
         style={{
           overflowY: "hidden",
           width: "50vw",
-        }}
-      >
-        {/* Table */}
-        <DataTable rows={rows} tableToPaper={tableToPaper} />
-      </Stack>
-
-      {/* Right */}
-      <Stack
-        className="RightContainer"
-        direction="column"
-        spacing={2}
+          height: "88vh",
+        }}>
+        {/* Left */}
+        <Stack
+          alignItems="center"
+          className="LeftContainer"
+          direction="column"
+          spacing={2}
+        >
+          {/* Table */}
+          <DataTable rows={rows} tableToPaper={tableToPaper} />
+        </Stack>
+      </Grid>
+      <Grid item xs={6} 
         style={{
           overflowY: "scroll",
           width: "50vw",
-          height: "100vh",
-        }}
-      >
-        {/* paper */}
-        <ExpandedView id={0} content={row} />
-      </Stack>
+          height: "88vh",
+        }}>
+        {/* Right */}
+        <Stack
+          className="RightContainer"
+          direction="column"
+          spacing={2}
+        >
+          {/* paper */}
+          <ExpandedView id={0} content={row} />
+        </Stack>
+      </Grid>
     </Grid>
   );
 }
