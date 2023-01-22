@@ -19,10 +19,12 @@ p = Piazza()
 p.user_login(os.getenv("PIAZZA_USER"), os.getenv("PIAZZA_PW"))
 
 
-def piazza_api(term="Winter Term 2 2023"):  # TODO: add flag to specify which data we are grabbing
-    """
-    gets data from piazza and posts it to the database. the term must be in form: "Winter Term {t} {yyyy}"
-    this will get all the data from winter term 2 2023 for example
+def piazza_api(include_discussions=False, term="Winter Term 2 2023"):
+    """Gets data from piazza and posts it to the database.
+
+    Args:
+        include_discussions (bool, optional): Whether to add discussions to the database. Defaults to False.
+        term (str, optional): The acedemic term of classes. Must be in form: "Winter Term {t} {yyyy}". Defaults to "Winter Term 2 2023".
     """
     classes: list = p.get_user_classes()
 
@@ -82,19 +84,21 @@ def piazza_api(term="Winter Term 2 2023"):  # TODO: add flag to specify which da
                     )
                 )
             else:
-                discussions_to_add.append(
-                    DiscussionPost(
-                        identifier=post_id,
-                        poster_name=original_poster,
-                        title=subject,
-                        post_type=msg_type,
-                        description=original_post_body,
-                        post_date=datetime.datetime.fromisoformat(created),
+                if include_discussions:
+                    discussions_to_add.append(
+                        DiscussionPost(
+                            identifier=post_id,
+                            poster_name=original_poster,
+                            title=subject,
+                            post_type=msg_type,
+                            description=original_post_body,
+                            post_date=datetime.datetime.fromisoformat(created),
+                        )
                     )
-                )
 
     add_to_database(announcements_to_add, "announcements")
-    # add_to_database(discussions_to_add, "discussions")
+    if include_discussions:
+        add_to_database(discussions_to_add, "discussions")
 
 
 if __name__ == "__main__":

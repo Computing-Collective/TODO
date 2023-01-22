@@ -18,7 +18,7 @@ def get_new_assignment():
     """Returns new assignments since last retrieval
     # TODO: add more info
     """
-    canvas_api()
+    canvas_api(True, False)
     for item in new_assignments:
         if item['manual_status']:
             new_assignments.remove(item)
@@ -30,7 +30,7 @@ def get_new_announcement():
     """Returns new announcements since last retrieval
     # TODO: add more info
     """
-    canvas_api()
+    canvas_api(False, True)
     piazza_api()
     for item in new_announcements:
         if item['manual_status']:
