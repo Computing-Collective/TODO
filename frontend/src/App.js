@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import DataTable from "./components/DataTable";
 import ContainedButtons from "./components/ContainedButton";
@@ -12,9 +12,17 @@ import ExpandedView from "./components/Expanded";
 
 function App() {
   const [view, setView] = useState("announcements");
-  const [assignment, setAssignments] = useState(refreshTable("new-assignments")); // holds all the assignments for the table
-  const [announcements, setAnnouncements] = useState(refreshTable("new-announcements")); // holds all the announcements for the table
+  const [assignment, setAssignments] = useState(null); // holds all the assignments for the table
+  const [announcements, setAnnouncements] = useState(null); // holds all the announcements for the table
   // const [rows, setRows] = useState([]); // holds all the rows in the table right now
+
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/get-all").then((response) => {
+      setAssignments(response.data.assignments);
+      setAnnouncements(response.data.announcements);
+      console.log(response.data);
+  }, [])});
+
   const [row, selectRow] = useState({
     id: 0,
     title: "Welcome to TODO",
@@ -34,21 +42,22 @@ function App() {
   async function refreshTable(request) {
     // request can be getall, new-announcements, new-assignments, mark-complete/<dataType>/<identifier>
     try {
+      console.log(`${request}`);
       let result = await axios({
         method: "GET",
         url: `http://localhost:5000/api/${request}`,
+      })
+      .then(function (response) {
+        console.log(response);
+        // for (let i = 0; i < response.data.length; i++) {
+        //   // console.log(response.data[i]);
+        // }
+        // setRows(response.data);
       });
       // console.log(result.response.data);
     } catch (err) {
-      // console.error(err.response.data);
+      console.error(err.response.data);
     }
-    // .then(function (response) {
-    //   console.log(response);
-    //   // for (let i = 0; i < response.data.length; i++) {
-    //   //   // console.log(response.data[i]);
-    //   // }
-    //   // setRows(response.data);
-    // });
   }
 
   const tableToPaper = (childData) => {
@@ -63,7 +72,8 @@ function App() {
           <Stack direction="row" spacing={2} justifyContent="left">
             <span style={{ paddingLeft: "30px" }}>
               <IconButton
-                onClick={() => {
+                onClick={(e) => {
+                  // e.preventDefault();
                   refreshTable(`new-${view}`);
                 }}
                 aria-label="refresh"
