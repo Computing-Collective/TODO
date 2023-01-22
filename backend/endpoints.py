@@ -1,16 +1,16 @@
-import flask
+import json
+import sys
+
 from bson import json_util
 from flask import Flask
-import sys
-import json
+from flask_cors import CORS
 
 sys.path.append('../')
 
-from backend.canvas.api import canvas_api
-from backend.piazza.api import piazza_api
 from backend.database.queries import get_from_database, mark_complete_database, new_assignments, new_announcements
+from backend.piazza.api import piazza_api
+from backend.canvas.api import canvas_api
 
-from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
