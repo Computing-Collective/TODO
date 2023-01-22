@@ -15,12 +15,12 @@ from backend.database.models import Assignment, AnnouncementMessage, Course
 from backend.database.queries import add_to_database
 
 
-def canvas_api(include_assignment: bool, include_announcement: bool):  # TODO: add flag to specify which data we are grabbing
+def canvas_api(include_assignment=True, include_announcement=True):  # TODO: add flag to specify which data we are grabbing
     """Fetches data from Canvas API and adds it to the database.
 
     Args:
-        include_assignment (bool): whether to add assignments to the database
-        include_announcement (bool): whether to add announcements to the database (also includes mail)
+        include_assignment (bool): whether to add assignments to the database. Defaults to True.
+        include_announcement (bool): whether to add announcements to the database (also includes mail). Defaults to True.
     """
     canvas = Canvas(API_URL, API_TOKEN)
 
