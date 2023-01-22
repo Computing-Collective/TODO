@@ -2,18 +2,26 @@ import React, { useState } from "react";
 import Grid from "@mui/material/Grid";
 import DataTable from "./components/DataTable";
 import ContainedButtons from "./components/ContainedButton";
-import OutlinedButton from "./components/OutlinedButton";
 import Stack from "@mui/material/Stack";
 import axios, { isCancel, AxiosError } from "axios";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import IconButton from "@mui/material/IconButton";
 import { Announcement } from "@mui/icons-material";
-import { red } from "@mui/material/colors";
+import Paper from "@mui/material/Paper";
+import ExpandedView from "./components/Expanded";
 
 function App() {
   const [view, setView] = useState("announcements");
-  const [assignment, setAssignments] = useState([]);
-  const [announcements, setAnnouncements] = useState([]);
+  const [assignment, setAssignments] = useState(() => {
+    axios.get(`/api/get-all`).then((response) => {
+      console.log(response);
+    });
+  });
+  const [announcements, setAnnouncements] = useState(() => {
+    axios.get(`/api/get-all`).then((response) => {
+      console.log(response);
+    });
+  });
 
   return (
     <Grid container spacing={2}>
@@ -21,7 +29,7 @@ function App() {
         {/* Buttons */}
         <span style={{ padding: "40px" }}>
           <Stack direction="row" spacing={2} justifyContent="left">
-            <span>
+            <span style={{ paddingLeft: "30px" }}>
               <IconButton
                 onClick={() => {
                   axios.get(`/api/new-${view}`).then((response) => {
@@ -30,7 +38,6 @@ function App() {
                   });
                 }}
                 aria-label="refresh"
-                style={{}}
               >
                 <RefreshIcon sx={{ color: "white" }} />
               </IconButton>
@@ -78,7 +85,9 @@ function App() {
           width: "50vw",
           height: "100vh",
         }}
-      ></Stack>
+      >
+        <ExpandedView id={0} />
+      </Stack>
     </Grid>
   );
 }
@@ -93,12 +102,8 @@ const rows = [
     dueDate: Date.now(),
     title: "Lab 2",
     description: "pain and suffering :D",
+    lastName: "hi",
+    firstName: "bye",
     // completed: <CheckBoxOutlineBlankIcon />,
   },
 ];
-
-// const darkTheme = createTheme({
-//   palette: {
-//     mode: "dark",
-//   },
-// });
