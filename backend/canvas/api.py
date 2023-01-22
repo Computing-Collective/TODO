@@ -2,7 +2,7 @@ from canvasapi import Canvas
 import dotenv
 import os
 import datetime
-from database.models import Assignment, AnnouncementMessage
+from database.models import Assignment, AnnouncementMessage, Course
 from database.queries import add_to_database
 
 dotenv.load_dotenv(dotenv.find_dotenv())
@@ -22,17 +22,21 @@ def canvas_api():
     # calendar = canvas.get_epub_exports()
 
     course_list = []  # A list of all the course objects
-    course_nick = {}  # Key: course_id (int), Value: course_nickname (string)
+    course_id_nick = {}  # Key: course_id (int), Value: course_nickname (string)
 
     assignments_to_add = []
     announcements_to_add = []
+    courses_to_add = []
 
     for course in courses:
         course_list.append(course)
         name: str = canvas.get_course_nickname(course).nickname
         if name is None:
             name = course.name
-        course_nick.update({course.id: name})
+        course_id_nick.update({course.id: name})
+        course_code_arr = course.course_code.split(" ")
+        if len(course_code_arr) > 1:
+            courses_to_add.append(Course(course_code_arr[0] + " " + course_code_arr[1], name))
         assignments = course.get_assignments()
         for assignment in assignments:
             identifier = str(assignment.id)
@@ -60,7 +64,7 @@ def canvas_api():
         posted_at: datetime.datetime = announcement.posted_at_date
         title: str = announcement.title
         poster: str = announcement.user_name
-        course_name: str = course_nick.get(int(announcement.context_code.split('_')[1]))
+        course_name: str = course_id_nick.get(int(announcement.context_code.split('_')[1]))
         announcements_to_add.append(
             AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
 
@@ -71,11 +75,13 @@ def canvas_api():
         posted_at: datetime.datetime = mail.last_message_at_date
         title: str = mail.subject
         poster: str = mail.participants[0]["name"]
-        course_name: str = course_nick.get(int(mail.context_code.split("_")[1]))
+        course_name: str = course_id_nick.get(int(mail.context_code.split("_")[1]))
         announcements_to_add.append(
             AnnouncementMessage(identifier, title, poster, course_name, link, message, posted_at))
 
     add_to_database(assignments_to_add, "assignments")
+    add_to_database(announcements_to_add, "announcements")
+    add_to_database(courses_to_add, "courses")
 
 
 if __name__ == "__main__":
