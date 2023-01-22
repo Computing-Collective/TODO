@@ -6,6 +6,7 @@ import { FastRewind } from "@mui/icons-material";
 
 export default function DataTable(props) {
   // const [select, setSelection] = useState(startPage); // the row that is selected needs to passed to the paper element
+  // TODO: need to change the parsing with diff classes
   return (
     <div style={{ height: "80vh", width: "90%" }}>
       <DataGrid

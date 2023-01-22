@@ -18,7 +18,7 @@ function App() {
   var [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/get-all").then((response) => {
+    axios.get("localhost:5000/api/get-all").then((response) => {
       console.log(response);
       setAssignments(response.data.assignments);
       setAnnouncements(response.data.announcements);
@@ -47,7 +47,7 @@ function App() {
   //     description: "should be easy go to canvas",
   //   },
   // ]);
-  const [rows, setRows] = useState([...announcements, ...assignments]);// ]); // holds all the rows in the table right now
+  const [rows, setRows] = useState([...announcements, ...assignments]); // ]); // holds all the rows in the table right now
   const [row, selectRow] = useState({
     id: 0,
     course: "Welcome to TODO",
@@ -58,7 +58,7 @@ function App() {
     try {
       axios({
         method: "GET",
-        url: `http://localhost:5000/api/${request}`,
+        url: `localhost:5000/api/${request}`,
       }).then(function (response) {
         return response.data;
       });
@@ -137,12 +137,15 @@ function App() {
           </Stack>
         </span>
       </Grid>
-      <Grid item xs={6} 
+      <Grid
+        item
+        xs={6}
         style={{
           overflowY: "hidden",
           width: "50vw",
           height: "88vh",
-        }}>
+        }}
+      >
         {/* Left */}
         <Stack
           alignItems="center"
@@ -154,18 +157,17 @@ function App() {
           <DataTable rows={rows} tableToPaper={tableToPaper} />
         </Stack>
       </Grid>
-      <Grid item xs={6} 
+      <Grid
+        item
+        xs={6}
         style={{
           overflowY: "scroll",
           width: "50vw",
           height: "88vh",
-        }}>
+        }}
+      >
         {/* Right */}
-        <Stack
-          className="RightContainer"
-          direction="column"
-          spacing={2}
-        >
+        <Stack className="RightContainer" direction="column" spacing={2}>
           {/* paper */}
           <ExpandedView id={0} content={row} />
         </Stack>
