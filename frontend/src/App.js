@@ -12,16 +12,48 @@ import ExpandedView from "./components/Expanded";
 
 function App() {
   const [view, setView] = useState("announcements");
-  const [assignment, setAssignments] = useState(() => {
-    axios.get(`/api/get-all`).then((response) => {
-      console.log(response);
-    });
-  });
-  const [announcements, setAnnouncements] = useState(() => {
-    axios.get(`/api/get-all`).then((response) => {
-      console.log(response);
-    });
-  });
+  const [assignment, setAssignments] = useState(refreshTable("new-assignments")); // holds all the assignments for the table
+  const [announcements, setAnnouncements] = useState(refreshTable("new-announcements")); // holds all the announcements for the table
+  // const [rows, setRows] = useState([]); // holds all the rows in the table right now
+  const [row, selectRow] = useState({
+    id: 0,
+    title: "Welcome to TODO",
+  }); // holds the row that is selected
+
+  let rows = [
+    {
+      id: 2,
+      course: "CPEN 212",
+      dueDate: Date.now(),
+      title: "Lab 2",
+      description: "pain and suffering :D",
+      // completed: <CheckBoxOutlineBlankIcon />,
+    },
+  ];
+
+  async function refreshTable(request) {
+    // request can be getall, new-announcements, new-assignments, mark-complete/<dataType>/<identifier>
+    try {
+      let result = await axios({
+        method: "GET",
+        url: `http://localhost:5000/api/${request}`,
+      });
+      // console.log(result.response.data);
+    } catch (err) {
+      // console.error(err.response.data);
+    }
+    // .then(function (response) {
+    //   console.log(response);
+    //   // for (let i = 0; i < response.data.length; i++) {
+    //   //   // console.log(response.data[i]);
+    //   // }
+    //   // setRows(response.data);
+    // });
+  }
+
+  const tableToPaper = (childData) => {
+    selectRow(childData);
+  };
 
   return (
     <Grid container spacing={2}>
@@ -32,10 +64,7 @@ function App() {
             <span style={{ paddingLeft: "30px" }}>
               <IconButton
                 onClick={() => {
-                  axios.get(`/api/new-${view}`).then((response) => {
-                    // rows = response...
-                    console.log(response);
-                  });
+                  refreshTable(`new-${view}`);
                 }}
                 aria-label="refresh"
               >
@@ -72,7 +101,7 @@ function App() {
         }}
       >
         {/* Table */}
-        <DataTable rows={rows} style={{}} />
+        <DataTable rows={rows} tableToPaper={tableToPaper} />
       </Stack>
 
       {/* Right */}
@@ -86,40 +115,10 @@ function App() {
           height: "100vh",
         }}
       >
-        <ExpandedView id={0} />
+        <ExpandedView id={0} content={row} />
       </Stack>
     </Grid>
   );
 }
 
 export default App;
-
-let rows = [
-  { id: 1, lastName: "Snow", firstName: "Jon", description: 35 },
-  {
-    id: 2,
-    course: "CPEN 212",
-    dueDate: Date.now(),
-    title: "Lab 2",
-    description: "pain and suffering :D",
-    lastName: "hi",
-    firstName: "bye",
-    // completed: <CheckBoxOutlineBlankIcon />,
-  },
-];
-
-function refreshPage() {
-  axios({
-    method: "GET",
-    url:"http://localhost:5000/getall",
-  })
-  .then(
-    function (response) {
-      for (let i = 0; i < response.data.length; i++) {
-        console.log(response.data[i]);
-      }
-      rows = response.data;
-      console.log(rows);
-    }
-  )
-}

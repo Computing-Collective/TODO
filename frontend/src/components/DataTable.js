@@ -4,13 +4,10 @@ import { useState } from "react";
 import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 import { FastRewind } from "@mui/icons-material";
 
-const startPage = {
-  id: 0,
-  title: "Welcome to TODO",
-};
+
 
 export default function DataTable(props) {
-  const [select, setSelection] = useState(startPage);
+  // const [select, setSelection] = useState(startPage); // the row that is selected needs to passed to the paper element
   return (
     <div style={{ height: "80vh", width: "90%" }}>
       <DataGrid
@@ -35,7 +32,9 @@ export default function DataTable(props) {
           },
         ]}
         onRowClick={(e) => {
-          setSelection(e.row);
+          // setSelection(e.row);
+          console.log(e.row);
+          props.tableToPaper(e.row);
         }}
         sx={{
           backgroundColor: "#141204",
