@@ -1,9 +1,12 @@
 import axios from "axios";
 export default function refreshPage() {
-  axios.get('/api/new-assignments')
+  axios({
+    method: "GET",
+    url:"http://localhost:5000/getall",
+  })
   .then(
     function (response) {
-      
+      console.log(response);
     }
   )
 }
