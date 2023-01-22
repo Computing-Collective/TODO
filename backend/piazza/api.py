@@ -2,13 +2,16 @@ from piazza_api import Piazza
 import os
 import dotenv
 import datetime
+import sys
 
-from database.models import (
+sys.path.append('../')
+
+from backend.database.models import (
     Assignment,
     AnnouncementMessage,
     DiscussionPost,
 )  # TODO: add discussions
-from database.queries import add_to_database
+from backend.database.queries import add_to_database
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -16,10 +19,12 @@ p = Piazza()
 p.user_login(os.getenv("PIAZZA_USER"), os.getenv("PIAZZA_PW"))
 
 
-def piazza(term="Winter Term 2 2023"):
-    """
-    gets data from piazza and posts it to the database. the term must be in form: "Winter Term {t} {yyyy}"
-    this will get all the data from winter term 2 2023 for example
+def piazza_api(include_discussions=False, term="Winter Term 2 2023"):
+    """Gets data from piazza and posts it to the database.
+
+    Args:
+        include_discussions (bool, optional): Whether to add discussions to the database. Defaults to False.
+        term (str, optional): The acedemic term of classes. Must be in form: "Winter Term {t} {yyyy}". Defaults to "Winter Term 2 2023".
     """
     classes: list = p.get_user_classes()
 
@@ -69,26 +74,33 @@ def piazza(term="Winter Term 2 2023"):
             if instructor_note:
                 announcements_to_add.append(
                     AnnouncementMessage(
-                        identifier=post_id,
+                        identifier="p" + post_id,
                         title=subject,
-                        poster=original_poster,
-                        course_name=course_name,
+                        poster_name=original_poster,
+                        course=course_name,
                         link=link,
-                        post_date=datetime.fromisoformat(created),
+                        post_date=datetime.datetime.fromisoformat(created),
                         message=original_post_body,
+                        mark_read=False,
                     )
                 )
             else:
-                discussions_to_add.append(
-                    DiscussionPost(
-                        identifier=post_id,
-                        poster_name=original_poster,
-                        title=subject,
-                        type=msg_type,
-                        description=original_post_body,
-                        post_date=datetime.fromisoformat(created),
+                if include_discussions:
+                    discussions_to_add.append(
+                        DiscussionPost(
+                            identifier=post_id,
+                            poster_name=original_poster,
+                            title=subject,
+                            post_type=msg_type,
+                            description=original_post_body,
+                            post_date=datetime.datetime.fromisoformat(created),
+                        )
                     )
-                )
 
     add_to_database(announcements_to_add, "announcements")
-    # add_to_database(discussions_to_add, "discussions")
+    if include_discussions:
+        add_to_database(discussions_to_add, "discussions")
+
+
+if __name__ == "__main__":
+    piazza_api()
